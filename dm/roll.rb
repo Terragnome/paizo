@@ -1,3 +1,5 @@
+require 'mactts'
+
 module DM
   class Dice
     attr_reader :expected_value
@@ -69,7 +71,24 @@ module DM
 
       eval_overflow = (sum_operations-sum_ev).to_f/sum_ev
 
+      say "Rolled #{formula}"
+      if eval_overflow<-0.75
+        say "Fucking bullshit.  #{sum_operations}.  "
+      elsif eval_overflow<-0.5
+        say "Shit.  Got #{sum_operations}"
+      elsif eval_overflow>0.75
+        say "Critical!  Got #{sum_operations}"
+      elsif eval_overflow>0.5
+        say "Woo!  Got #{sum_operations}"
+      else
+        say "Got #{sum_operations}"
+      end
+
       "#{operations} = #{sum_operations}\n#{formula}\nEV:#{sum_ev} | #{sum_operations} (#{eval_overflow>0 ? '+' : ''}#{(eval_overflow*100).round(2)}%)"
+    end
+
+    def self.say(sentence)
+      Mac::TTS.say(sentence, :alex)
     end
 
     def self.roll(formula, method=:sum)
